@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Functional programming in C#</title>
+
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/black.css" />
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+
+    <style>
+      .logo {
+        position: fixed;
+        left: 50%;
+        top: 25px;
+        transform: translateX(-50%);
+      }
+    </style>
+  </head>
+
+  <body>
+    <img src="/images/lambda.png" height="56" class="logo"/>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <img src="/images/lambda.png" height="156" />
+          <h3>Functional programming in c#</h3>
+          <p>
+            <small
+              >By
+              <a href="https://github.com/Tomas-Juri">Tomáš Juřička</a></small
+            >
+          </p>
+
+  <aside class="notes">
+    Shhh, these are your private notes 📝
+  </aside>
+        </section>
+        <section>
+          <h3>What is it?</h3>
+          <p>Focus on functions</p>
+		  <p>Expressions over statements</p>
+          <p>Immutable state</p>
+        </section>
+        <section>
+          <h3>Why Functional in c# ?</h3>
+          <ul>
+            <p>It's already there</p>
+            <p>You're already using it</p>
+            <p>Not hard at all</p>
+            <p>More power</p>
+            <p>Cleaner code</p>
+          </ul>
+        </section>
+        <section>
+          <p style="color: gray">It's already there & you're using it</p>
+          <h3>LINQ</h3>
+          <pre class="language-cs">
+			<code>
+			list
+				.Select(number => number + " - Chickens")
+				.Where(word => word.Contains('1'))
+				.Where(string.IsNullOrEmpty)
+				.GroupBy(word => word.Length)
+				.ToList();
+				</code>
+			</pre>
+        </section>
+        <section>
+          <p style="color: gray">It's already there & you're using it</p>
+          <h3>Func type</h3>
+          <pre class="language-cs">
+			<code>
+				private bool Validate(Func&lt;string, bool&gt; isValid)	
+			</code>
+		  </pre>
+          <pre class="language-cs">
+			<code>
+				private static bool IsValid(int input)
+
+				...
+
+				list
+            .Where(IsValid)
+            .ToList();
+			</code>
+		  </pre>
+        </section>
+        <section>
+          <p style="color: gray">It's already there & you're using it</p>
+          <h3>Expressions over statements</h3>
+          <pre class="language-cs">
+			<code>
+				return a ? b : c
+			</code>
+		  </pre>
+          <pre class="language-cs">
+			<code>
+				var message = number switch
+        {
+            > 5 => "Too much",
+            < 0 => "Cannot be negative",
+            < 1 => "Too low",
+            _ => "It's ok"
+        };
+			</code>
+		  </pre>
+        </section>
+        <section>
+          <p style="color: gray">It's already there & you're using it</p>
+          <h3>Immutability</h3>
+          <pre class="language-cs">
+			<code>
+    int Count 
+
+    string Name
+
+    DateTime Date
+			</code>
+		  </pre>
+        </section>
+        <section>
+          <p style="color: gray">It's already there & maybe you're using it</p>
+          <h3>Immutability</h3>
+          <pre class="language-cs">
+			<code>
+        public record Response
+        {
+          public DateOnly From { get; init; }
+          
+          public DateOnly To { get; init; }
+          
+          public int Duration { get; init; }
+        }
+			</code>
+		  </pre>
+        </section>
+        <section>
+          <p style="color: gray">It's already there & maybe you're using it</p>
+          <h3>Immutability</h3>
+          <pre class="language-cs">
+			<code>
+				var x = response with
+			  {
+				  Duration = 20
+			  };
+			</code>
+		  </pre>
+        </section>
+        <section>
+          <h3>So what should we do more ?</h3>
+		  <p style="color: gray;">Embrace your inner lambda</p>
+        </section>
+        <section>
+          <h2>Start focusing on expressions and chaining</h2>
+        </section>
+      </div>
+    </div>
+
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
+    </script>
+  </body>
+</html>

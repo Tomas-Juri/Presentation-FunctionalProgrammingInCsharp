@@ -1,1 +1,1 @@
-# Functional-programming-in-csharp
+# Functional programing in c#
