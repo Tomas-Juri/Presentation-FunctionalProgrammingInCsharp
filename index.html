@@ -8,6 +8,7 @@
     />
     <title>Functional programming in C#</title>
 
+    <link rel="icon" type="image/x-icon" href="/images/lambda_white.png" />
     <link rel="stylesheet" href="dist/reset.css" />
     <link rel="stylesheet" href="dist/reveal.css" />
     <link rel="stylesheet" href="dist/theme/black.css" />
@@ -19,15 +20,20 @@
         left: 50%;
         top: 25px;
         transform: translateX(-50%);
+        transition: all linear 300ms;
+      }
+
+      .hide {
+        opacity: 0;
       }
     </style>
   </head>
 
   <body>
-    <img src="/images/lambda.png" height="56" class="logo"/>
+    <img src="/images/lambda.png" height="56" class="logo hide" id="logo" />
     <div class="reveal">
       <div class="slides">
-        <section>
+        <section id="first">
           <img src="/images/lambda.png" height="156" />
           <h3>Functional programming in c#</h3>
           <p>
@@ -36,16 +42,27 @@
               <a href="https://github.com/Tomas-Juri">Tomáš Juřička</a></small
             >
           </p>
-
-  <aside class="notes">
-    Shhh, these are your private notes 📝
-  </aside>
         </section>
         <section>
           <h3>What is it?</h3>
-          <p>Focus on functions</p>
-		  <p>Expressions over statements</p>
-          <p>Immutable state</p>
+          <ul>
+            <p>Focus on functions</p>
+            <p>Expressions over statements</p>
+            <p>Immutable state</p>
+          </ul>
+          <aside class="notes">
+            Splitting data and logic <br />
+            Small reusable functions <br />
+            Pass functions around <br />
+            Functions = methods that return value <br /><br />
+            Expression is something that returns a value <br />
+            Chain functions on values <br />
+            Return a function as a value <br /><br />
+            State doesn't change <br />
+            Extreme benefits in UI libs like Blazor <br />
+            Fluent like API <br />
+            Thread safe-ish
+          </aside>
         </section>
         <section>
           <h3>Why Functional in c# ?</h3>
@@ -56,6 +73,13 @@
             <p>More power</p>
             <p>Cleaner code</p>
           </ul>
+          <aside class="notes">
+            In c# since c# 2 <br />
+            Examples later <br />
+            Dont use math definitions - use your own names<br />
+            Some people say that learning functional first and OOP later made
+            more sense for them <br /><br />
+          </aside>
         </section>
         <section>
           <p style="color: gray">It's already there & you're using it</p>
@@ -70,6 +94,11 @@
 				.ToList();
 				</code>
 			</pre>
+          <aside class="notes">
+            The whole library has functional design <br />
+            Saying what you want to be done <br />
+            One of the most powerfull features of the .net ecosystem
+          </aside>
         </section>
         <section>
           <p style="color: gray">It's already there & you're using it</p>
@@ -116,13 +145,12 @@
           <h3>Immutability</h3>
           <pre class="language-cs">
 			<code>
-    int Count 
-
-    string Name
-
-    DateTime Date
+                      int, string, Guid, DateTime, Tuple&lt;&gt; ...
 			</code>
 		  </pre>
+      <aside class="notes">
+        All primitive value types: (Note: not all value types are immutable!)
+      </aside>
         </section>
         <section>
           <p style="color: gray">It's already there & maybe you're using it</p>
@@ -154,10 +182,315 @@
         </section>
         <section>
           <h3>So what should we do more ?</h3>
-		  <p style="color: gray;">Embrace your inner lambda</p>
+          <p style="color: gray">Embrace your inner lambda</p>
+        </section>
+        <section>
+          <h2>Use More LINQ</h2>
         </section>
         <section>
           <h2>Start focusing on expressions and chaining</h2>
+        </section>
+        <section>
+          <small>From this ...</small>
+          <pre class="language-cs">
+            <code>
+  public static Risk CalculateRisk(int age, Gender gender)
+  {
+      var treshold = 0;
+      if (gender == Gender.Female)
+          treshold = 62;
+      else
+          treshold = 60;
+
+      if (treshold > age)
+          return Risk.Low;
+      
+      return Risk.Medium;
+  }
+            </code>
+            </pre>
+        </section>
+        <section>
+          <small>... to this.</small>
+          <pre class="language-cs">
+            <code>
+  public static Risk CalculateRisk(int age, Gender gender) => 
+    Treshold(age, gender) > age ? Risk.Low : Risk.Medium;
+
+  private static int Treshold(int age, Gender gender) =>
+      gender == Gender.Female ? 62 : 60;
+            </code>
+            </pre>
+        </section>
+        <section>
+          <h2>Start writing your own, small HOFs</h2>
+        </section>
+        <section>
+          <small>From this ...</small>
+          <pre class="language-cs">
+            <code>
+    public static int? CalculateSalary()
+    {
+        var employee = GetEmployee();
+        if (employee == null)
+            return null;
+
+        return employee.Name == "Tom" 
+            ? 0 
+            : int.MaxValue;
+    }
+            </code>
+            </pre>
+        </section>
+        <section>
+          <small>... to this ...</small>
+          <pre class="language-cs">
+            <code>
+    public static int? CalculateSalary() =>
+      GetEmployee()
+        .Map(employee => employee.Name == "Tom"
+            ? 0
+            : int.MaxValue);
+
+    public static TOut? Map&lt;TIn, TOut&gt;(this TIn? input, Func&lt;TIn, TOut&gt; map) => 
+        input == null ? null : map(input);
+            </code>
+            </pre>
+        </section>
+        <section>
+          <small>... up to this.</small>
+          <pre class="language-cs">
+            <code>
+    public static int? CalculateSalary() =>
+        GetEmployee().Map(ToSalary);
+
+    private static int ToSalary(Employee employee) => 
+        employee.Name == "Tom" ? 0 : int.MaxValue;
+
+    public static TOut? Map&lt;TIn, TOut&gt;(this TIn? input, Func&lt;TIn, TOut&gt; map) => 
+        input == null ? null : map(input);
+            </code>
+            </pre>
+        </section>
+        <section>
+          <small style="color: #883192">😱😱😱😱😱😱😱</small>
+          <h2>Will this compile?</h2>
+          <pre class="language-cs">
+            <code>
+    public static TOut? Map&lt;TIn, TOut&gt;(this TIn? input, Func&lt;TIn, TOut&gt; map) => 
+        input == null ? null : map(input);
+            </code>
+            </pre>
+        </section>
+        <section>
+          <small style="color: #883192">😡😡😡😡😡😡😡</small>
+          <h2>It won't</h2>
+          <pre class="language-cs">
+            <code>
+    public static TOut? Map&lt;TIn, TOut&gt;(this TIn? input, Func&lt;TIn, TOut&gt; map)
+    
+      where TOut : struct
+
+        => input == null ? null : map(input);
+            </code>
+            </pre>
+        </section>
+        <section>
+          <h2>Hey, but data fetching is async</h2>
+        </section>
+        <section>
+          <small>From this ...</small>
+          <pre class="language-cs">
+            <code>
+    public static async Task&lt;int?&gt; CalculateSalary()
+    {
+        var employee = await GetEmployee();
+        if (employee == null)
+            return null;
+
+        return employee.Name == "Tom"
+            ? 0
+            : int.MaxValue;
+    }
+            </code>
+            </pre>
+        </section>
+        <section>
+          <small>... to this ??? ...</small>
+          <pre class="language-cs">
+            <code>
+    public static async Task&lt;int?&gt; CalculateSalary()
+    {
+        var employee = await GetEmployee();
+        return employee.Map(employee => employee.Name == "Tom" ? 0 : int.MaxValue);
+    }
+            </code>
+            </pre>
+        </section>
+        <section>
+          <small>... no, like this ! ...</small>
+          <pre class="language-cs">
+            <code>
+    public static async Task&lt;int?&gt; CalculateSalary() =>
+        await GetEmployee().Map(ToSalary);
+
+    public static async Task&lt;TOut?> Map&lt;TIn, TOut>(this Task&lt;TIn?> input, 
+        Func&lt;TIn, TOut> map)
+      await input switch
+      {
+          null => null,
+          var value => map(value)
+      };
+            </code>
+            </pre>
+        </section>
+        <section>
+          <small>... but what if i want something else ...</small>
+          <pre class="language-cs">
+            <code>
+    public static async Task<(int, string)?> CalculateSalary()
+    {
+        var employee = await GetEmployee();
+        return employee == null 
+            ? null 
+            : (ToSalary(employee), ToSomethingElse(employee));
+    }
+            </code>
+            </pre>
+        </section>
+        <section>
+          <small>... fasten your seatbelts ...</small>
+        </section>
+        <section data-transition="fade">
+          <small>... 🪄 Tada!</small>
+          <pre class="language-cs">
+            <code>
+    public static async Task<(int, string)?> CalculateSalary() =>
+      await
+          from employee in GetEmployee()
+          from salary in ToSalary(employee)
+          from somethingElse in ToSomethingElse(employee)
+          select (salary, somethingElse);
+            </code>
+            </pre>
+        </section>
+        <section data-transition="fade">
+          <small>🔮 Magic behind:</small>
+          <pre class="language-cs">
+            <code>
+    public static async Task<(int, string)?> CalculateSalary() =>
+      await
+          from employee in GetEmployee()
+          from salary in ToSalary(employee)
+          from somethingElse in ToSomethingElse(employee)
+          select (salary, somethingElse);
+            </code>
+            </pre>
+          <div class="fragment">
+            <pre class="language-cs">
+            <code>
+    public static async Task&lt;T3> SelectMany&lt;T1, T2, T3>(this Task&lt;T1> source, 
+        Func&lt;T1, T2> bind, 
+        Func&lt;T1, T2, T3> project) =>
+        await source switch
+        {
+            var t1 => project(t1, bind(t1))
+        };
+            </code>
+            </pre>
+          </div>
+        </section>
+        <section>
+          <h2>
+            Data is nice <br />
+            but what if there's no data
+          </h2>
+        </section>
+        <section>
+          <small>Introducing</small>
+          <pre class="language-cs" style="width: fit-content">
+            <code>
+    void
+            </code>
+            </pre>
+        </section>
+        <section>
+          <small>From this ...</small>
+          <pre class="language-cs">
+            <code>
+    public static async Task Store(Employee employee)
+    {
+        if (employee.Id > 10)
+            await SaveToDatabase(employee);
+        else
+            await SaveToMemory(employee);
+    }
+
+    public static async Task SaveToDatabase(Employee employee)
+
+    public static async Task SaveToMemory(Employee employee)
+            </code>
+            </pre>
+        </section>
+        <section>
+          <small>... to this ? ...</small>
+          <pre class="language-cs">
+            <code>
+    public static async Task Store(Employee employee) =>
+      employee.Id > 10
+          ? await SaveToDatabase(employee)
+          : await SaveToMemory(employee);
+
+    public static async Task SaveToDatabase(Employee employee)
+
+    public static async Task SaveToMemory(Employee employee)
+            </code>
+            </pre>
+        </section>
+        <section>
+          <small>... using this!</small>
+          <pre class="language-cs">
+            <code  style="max-height: 550px;">
+    global using Unit = System.ValueTuple;
+
+    public static async Task&lt;Unit&gt; Store(Employee employee) =>
+      employee.Id &gt; 10
+          ? await SaveToDatabase(employee)
+          : await SaveToMemory(employee);
+
+    public static async Task&lt;Unit&gt; SaveToDatabase(Employee employee)
+        // Do something
+        return new Unit();
+
+    public static async Task&lt;Unit&gt; SaveToMemory(Employee employee)
+        // Do something
+        return new Unit();
+            </code>
+            </pre>
+        </section>
+        <section>
+          <h4>
+            Unit is extremely usefull later <br />
+            when writing more functional code.
+          </h4>
+        </section>
+        <section>
+          <h2>Conclusion</h2>
+          <p class="fragment">Be more functional</p>
+        </section>
+        <section>
+          <h2>Any Questions?</h2>
+        </section>
+        <section>
+          <a
+            href="https://github.com/Tomas-Juri/Functional-programming-in-csharp"
+            style="display: flex; flex-direction: column; align-items: center"
+          >
+            <img src="/images/github-link.png" width="300" alt="" />
+            <small>
+              https://github.com/Tomas-Juri/Functional-programming-in-csharp
+            </small>
+          </a>
         </section>
       </div>
     </div>
@@ -168,8 +501,18 @@
     <script src="plugin/highlight/highlight.js"></script>
     <script>
       Reveal.initialize({
+        width: "70%",
+        height: "80%",
         hash: true,
         plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
+
+      Reveal.on("slidechanged", (event) => {
+        if (event.previousSlide.id === "first")
+          document.getElementById("logo").classList.remove("hide");
+
+        if (event.currentSlide.id === "first")
+          document.getElementById("logo").classList.add("hide");
       });
     </script>
   </body>

@@ -41,7 +41,7 @@
 
 ### LINQ - It's already there & you're using it
 - The whole library has functional design, mostly based on higher order functions
-- You're just saying what you want to be done, instead of doing it yourself
+- You're just saying what you want to be done, instead of how to do it
 - I think we all agree that this library is one of the most powerfull features of the .net ecosystem
 
 ### `Func<>` type - It's already there & you're using it
@@ -60,11 +60,20 @@
 ### So what should we do more ?
 - But Tom, if we're already using so much functional concept in c#, what can we do more ?
 
+### Use More LINQ
+- It's there and it's very powerfull, rethink if you rewrite your code using LINQ
+
 ### Start focusing on expressions and chaining
-- 
+- You can do better than just ifs and elses, use expressions and split your functions as well
+- Show example and explain
 
-## Resources
+### Start writing your own, small HOFs
+- Once again mentioning LINQ, you can learn from it, and write methods similar to it
+- Show example and explain
+- Surprise question 
 
-- [The Bible](https://www.manning.com/books/functional-programming-in-c-sharp)  
-- [Shameless distribution of the Bible](https://alek772.github.io/Books/Functional%20Programming%20in%20Csharp.pdf)  
-- [The functional journey of C# - Mads Torgersen - NDC Copenhagen 2022](https://www.youtube.com/watch?v=CLKZ7ZgVido)
+### Data is fine, but what if there's none
+- Introducing void
+- Void makes our life miserable when being more functional in c#
+- You cannot chain methods that return `void`
+- You cannot create `void`
