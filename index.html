@@ -79,6 +79,9 @@
             Dont use math definitions - use your own names<br />
             Some people say that learning functional first and OOP later made
             more sense for them <br /><br />
+            You can write more robust and testable code, when you focus on more smaller functions, testing becomes easy and fast <br> <br>
+            You will also find yourself writing more reusable code, and it will be more easy to reuse, since you should split your data (types) and behaviour (functions) <br><br>
+            Smaller functions, less boilerplate, more reusable code, what more do you want from cleaner code
           </aside>
         </section>
         <section>
@@ -119,6 +122,10 @@
             .ToList();
 			</code>
 		  </pre>
+      <aside class="notes">
+        Since you're already using LINQ, youre already treating functions as values that can be passed around <br /><br>
+        You're therefore using something called higher order functions, which we will show later <br />
+      </aside>
         </section>
         <section>
           <p style="color: gray">It's already there & you're using it</p>
@@ -139,6 +146,7 @@
         };
 			</code>
 		  </pre>
+      
         </section>
         <section>
           <p style="color: gray">It's already there & you're using it</p>
@@ -182,7 +190,7 @@
         </section>
         <section>
           <h3>So what should we do more ?</h3>
-          <p style="color: gray">Embrace your inner lambda</p>
+          <p style="color: gray">Embrace your inner džoukr</p>
         </section>
         <section>
           <h2>Use More LINQ</h2>
@@ -263,6 +271,9 @@
             <code>
     public static int? CalculateSalary() =>
         GetEmployee().Map(ToSalary);
+
+    public static int[] CalculateSalaries() =>
+        GetEmployee().Select(ToSalary).ToArray();
 
     private static int ToSalary(Employee employee) => 
         employee.Name == "Tom" ? 0 : int.MaxValue;
