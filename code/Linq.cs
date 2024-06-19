@@ -21,9 +21,15 @@ public class Linq
         {
             Duration = 20
         };
-        
-        
+
+        var isValid = Validate(value, IsNotEmpty, IsAllUppercase);
     }
+
+    private static bool IsNotEmpty(string value)
+        => false;
+
+    private static bool IsAllUppercase(string value)
+        => false;
 
     private class Model
     {
@@ -42,5 +48,6 @@ public class Linq
     private static bool IsValid(int input) 
         => true;
 
-
+    private static bool Validate(string input, params Func<string, bool>[] validations)
+        => validations.All(x => x(input));
 }

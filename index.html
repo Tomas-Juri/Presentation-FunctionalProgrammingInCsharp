@@ -46,7 +46,7 @@
         <section>
           <h3>What is it?</h3>
           <ul>
-            <p>Focus on functions</p>
+            <p>Separating functions and Data</p>
             <p>Expressions over statements</p>
             <p>Immutable state</p>
           </ul>
@@ -108,11 +108,6 @@
           <h3>Func type</h3>
           <pre class="language-cs">
 			<code>
-				private bool Validate(Func&lt;string, bool&gt; isValid)	
-			</code>
-		  </pre>
-          <pre class="language-cs">
-			<code>
 				private static bool IsValid(int input)
 
 				...
@@ -122,6 +117,15 @@
             .ToList();
 			</code>
 		  </pre>
+      <pre class="language-cs">
+  <code>
+  private bool Validate(string input, params Func&lt;string, bool&gt;[] validations)	
+  
+  ...
+
+  var isValid = Validate(value, IsNotEmpty, IsAllUppercase);
+  </code>
+  </pre>
       <aside class="notes">
         Since you're already using LINQ, youre already treating functions as values that can be passed around <br /><br>
         You're therefore using something called higher order functions, which we will show later <br />
@@ -190,7 +194,7 @@
         </section>
         <section>
           <h3>So what should we do more ?</h3>
-          <p style="color: gray">Embrace your inner džoukr</p>
+          <p style="color: gray">Embrace your inner lambda</p>
         </section>
         <section>
           <h2>Use More LINQ</h2>
@@ -231,7 +235,7 @@
             </pre>
         </section>
         <section>
-          <h2>Start writing your own, small HOFs</h2>
+          <h2>Start writing your own "LINQ"</h2>
         </section>
         <section>
           <small>From this ...</small>
