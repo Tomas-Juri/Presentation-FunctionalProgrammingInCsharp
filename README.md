@@ -1,5 +1,7 @@
 # Functional programing in c#
 
+Deployed at [github pages](https://tomas-juri.github.io/Presentation-FunctionalProgrammingInCsharp/#/first)
+
 ## Outline
 - What is it?
 - Why Functional in c# ?
